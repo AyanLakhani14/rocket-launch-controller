@@ -28,7 +28,6 @@ class _CounterWidgetState extends State<CounterWidget> {
   static const int _maxFuel = 100;
   static const int _minFuel = 0;
 
-  // Ignite button
   void _ignite() {
     setState(() {
       if (_counter < _maxFuel) {
@@ -37,12 +36,17 @@ class _CounterWidgetState extends State<CounterWidget> {
     });
   }
 
-  // Decrement button
   void _decrement() {
     setState(() {
       if (_counter > _minFuel) {
         _counter--;
       }
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      _counter = 0;
     });
   }
 
@@ -90,6 +94,11 @@ class _CounterWidgetState extends State<CounterWidget> {
               ElevatedButton(
                 onPressed: _decrement,
                 child: const Text('Decrement'),
+              ),
+              const SizedBox(width: 12),
+              ElevatedButton(
+                onPressed: _reset,
+                child: const Text('Reset'),
               ),
             ],
           ),
