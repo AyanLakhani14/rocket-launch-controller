@@ -50,7 +50,6 @@ class _CounterWidgetState extends State<CounterWidget> {
     });
   }
 
-  // Objective 4: helper function for color state
   Color _statusColor() {
     if (_counter == 0) return Colors.red;
     if (_counter <= 50) return Colors.orange;
@@ -60,6 +59,7 @@ class _CounterWidgetState extends State<CounterWidget> {
   @override
   Widget build(BuildContext context) {
     final Color status = _statusColor();
+    final bool isLiftoff = _counter == _maxFuel;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,10 +70,10 @@ class _CounterWidgetState extends State<CounterWidget> {
         children: [
           Center(
             child: Container(
-              color: status, // container matches status color now
+              color: status,
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
               child: Text(
-                '$_counter',
+                isLiftoff ? 'LIFTOFF!' : '$_counter',
                 style: const TextStyle(fontSize: 50.0, color: Colors.white),
               ),
             ),
