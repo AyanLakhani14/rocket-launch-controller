@@ -23,15 +23,25 @@ class CounterWidget extends StatefulWidget {
 }
 
 class _CounterWidgetState extends State<CounterWidget> {
-  // set counter value
   int _counter = 0;
 
   static const int _maxFuel = 100;
+  static const int _minFuel = 0;
 
+  // Ignite button
   void _ignite() {
     setState(() {
       if (_counter < _maxFuel) {
         _counter++;
+      }
+    });
+  }
+
+  // Decrement button
+  void _decrement() {
+    setState(() {
+      if (_counter > _minFuel) {
+        _counter--;
       }
     });
   }
@@ -69,9 +79,19 @@ class _CounterWidgetState extends State<CounterWidget> {
 
           const SizedBox(height: 16),
 
-          ElevatedButton(
-            onPressed: _ignite,
-            child: const Text('Ignite'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: _ignite,
+                child: const Text('Ignite'),
+              ),
+              const SizedBox(width: 12),
+              ElevatedButton(
+                onPressed: _decrement,
+                child: const Text('Decrement'),
+              ),
+            ],
           ),
         ],
       ),
