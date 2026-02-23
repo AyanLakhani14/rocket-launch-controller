@@ -50,8 +50,17 @@ class _CounterWidgetState extends State<CounterWidget> {
     });
   }
 
+  // Objective 4: helper function for color state
+  Color _statusColor() {
+    if (_counter == 0) return Colors.red;
+    if (_counter <= 50) return Colors.orange;
+    return Colors.green;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Color status = _statusColor();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rocket Launch Controller'),
@@ -61,10 +70,11 @@ class _CounterWidgetState extends State<CounterWidget> {
         children: [
           Center(
             child: Container(
-              color: Colors.blue,
+              color: status, // container matches status color now
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
               child: Text(
                 '$_counter',
-                style: const TextStyle(fontSize: 50.0),
+                style: const TextStyle(fontSize: 50.0, color: Colors.white),
               ),
             ),
           ),
@@ -80,9 +90,7 @@ class _CounterWidgetState extends State<CounterWidget> {
             activeColor: Colors.blue,
             inactiveColor: Colors.red,
           ),
-
           const SizedBox(height: 16),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
