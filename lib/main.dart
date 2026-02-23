@@ -28,12 +28,44 @@ class _CounterWidgetState extends State<CounterWidget> {
   static const int _maxFuel = 100;
   static const int _minFuel = 0;
 
+  // Bonus: prevents dialog spam while staying at 100
+  bool _dialogShownAt100 = false;
+
+  void _maybeShowLiftoffDialog() {
+    if (_counter == _maxFuel && !_dialogShownAt100) {
+      _dialogShownAt100 = true;
+
+      // Show after the frame to avoid build/setState conflicts
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('🚀 LIFTOFF!'),
+            content: const Text('Launch Successful — fuel reached 100.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
   void _ignite() {
     setState(() {
       if (_counter < _maxFuel) {
         _counter++;
       }
+      if (_counter != _maxFuel) {
+        _dialogShownAt100 = false; // allow later if we move away (safety)
+      }
     });
+    _maybeShowLiftoffDialog();
   }
 
   void _decrement() {
@@ -41,12 +73,16 @@ class _CounterWidgetState extends State<CounterWidget> {
       if (_counter > _minFuel) {
         _counter--;
       }
+      if (_counter != _maxFuel) {
+        _dialogShownAt100 = false; // allow dialog again next time we hit 100
+      }
     });
   }
 
   void _reset() {
     setState(() {
       _counter = 0;
+      _dialogShownAt100 = false;
     });
   }
 
@@ -54,6 +90,16 @@ class _CounterWidgetState extends State<CounterWidget> {
     if (_counter == 0) return Colors.red;
     if (_counter <= 50) return Colors.orange;
     return Colors.green;
+  }
+
+  void _setFromSlider(double value) {
+    setState(() {
+      _counter = value.toInt().clamp(_minFuel, _maxFuel);
+      if (_counter != _maxFuel) {
+        _dialogShownAt100 = false; // if user slides away, re-arm dialog
+      }
+    });
+    _maybeShowLiftoffDialog();
   }
 
   @override
@@ -82,11 +128,7 @@ class _CounterWidgetState extends State<CounterWidget> {
             min: 0,
             max: 100,
             value: _counter.toDouble(),
-            onChanged: (double value) {
-              setState(() {
-                _counter = value.toInt();
-              });
-            },
+            onChanged: _setFromSlider,
             activeColor: Colors.blue,
             inactiveColor: Colors.red,
           ),
