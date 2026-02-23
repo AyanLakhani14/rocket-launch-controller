@@ -26,6 +26,16 @@ class _CounterWidgetState extends State<CounterWidget> {
   // set counter value
   int _counter = 0;
 
+  static const int _maxFuel = 100;
+
+  void _ignite() {
+    setState(() {
+      if (_counter < _maxFuel) {
+        _counter++;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +65,13 @@ class _CounterWidgetState extends State<CounterWidget> {
             },
             activeColor: Colors.blue,
             inactiveColor: Colors.red,
+          ),
+
+          const SizedBox(height: 16),
+
+          ElevatedButton(
+            onPressed: _ignite,
+            child: const Text('Ignite'),
           ),
         ],
       ),
